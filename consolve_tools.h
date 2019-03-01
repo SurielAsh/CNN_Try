@@ -32,7 +32,7 @@ conslv max_pooling(conslv tar,int pstep,int pdim)
 						max = tar.self[ix + x][iy + y];
 				}
 			}
-			tmp.self[ix][iy]=max;
+			tmp.self[kx][ky]=max;
 
 		}
 	}
@@ -59,13 +59,38 @@ conslv arg_pooling(conslv tar,int pstep,int pdim)
 						sum += tar.self[ix + x][iy + y];
 				}
 			}
-			tmp.self[ix][iy]=sum/(pdim^2);
+			tmp.self[kx][ky]=sum/(pdim^2);
 
 		}
 	}
 	return tmp;
 }
 
+conslv consolve(conslv tar,cslcore core,int pstep)
+{
+	if((tar.d-core.d)%pstep!=0)
+		tar.ex((tar.d-core.d)%pstep);
+	int tim=(tar.d-core.d)/pstep+1;
+	conslv tmp;
+	tmp.d=tim;
+	tmp.ini();
+	for(int ix=0,kx=0;ix<tim;ix+=pstep,kx++)
+	{
+		for(int iy=0,ky=0;iy<tim;iy+=pstep,ky++)
+		{
+			double sum=0;
+			for (int x = 0; x < core.d; x++)
+			{
+				for (int y = 0; y < core.d; y++)
+				{
+					sum += (tar.self[ix + x][iy + y]*core.self[x][y]+core.pow);
+				}
+			}
+			tmp.self[kx][ky]=sum;
+		}
+	}
+	return tmp;
+}
 
 
 #endif //CNNTRY_CONSOLVE_TOOLS_H

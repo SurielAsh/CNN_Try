@@ -61,7 +61,7 @@ void conslv::max_pooling(int pstep,int pdim)
 						max = self[ix + x][iy + y];
 				}
 			}
-			tmp.self[ix][iy]=max;
+			tmp.self[kx][ky]=max;
 
 		}
 	}
@@ -89,13 +89,14 @@ void conslv::arg_pooling(int pstep,int pdim)
 					sum += self[ix + x][iy + y];
 				}
 			}
-			tmp.self[ix][iy]=sum/(pdim^2);
+			tmp.self[kx][ky]=sum/(pdim^2);
 
 		}
 	}
 	self=tmp.self;
 	d=tmp.d;
 }
+
 
 void conslv::disnega_relu()
 {
