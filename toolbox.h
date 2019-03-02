@@ -1,10 +1,14 @@
-#ifndef SIMS_OTHERTOOLS_H
-#define SIMS_OTHERTOOLS_H
+//
+// Created by nagi on 19-3-2.
+//
 
-
+#ifndef CNNTRY_TOOLBOX_H
+#define CNNTRY_TOOLBOX_H
 #include <iostream>
 #include <vector>
 #include <sys/time.h>
+using std::vector;
+
 /* 初始化随机种子 */
 void InitRand()
 {
@@ -74,10 +78,5 @@ void vini(std::vector<double> &v,int n,double par)
 		v.push_back(par);
 }
 
-void fw(int Gmax,int gen,double &w)
-{
-	gen++;
-	w=(1/gen);
-}
 
-#endif //SIMS_OTHERTOOLS_H
+#endif //CNNTRY_TOOLBOX_H
