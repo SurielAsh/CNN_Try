@@ -9,7 +9,7 @@ using namespace std;
 int main()
 {
 	int dim,cstep,core_dim,pstep,pooling_dim;
-	dim=32;
+	dim=64;
 	cstep=2;
 	core_dim=3;
 	pstep=2;

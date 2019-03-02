@@ -12,8 +12,8 @@
 using std::vector;
 
 struct conslv{
-	vector<vector<double>> self;
-	vector<double> fulink;
+	vector<vector<int>> self;
+	vector<int> fulink;
 	int d;
 	void ini();
 	void ex(int ex);
@@ -30,7 +30,7 @@ void conslv::ini()
 
 void conslv::ex(int ex)
 {
-	vector<vector<double>> tmp;
+	vector<vector<int>> tmp;
 	vini(tmp,d+ex);
 	for(int i=0;i<d;i++)
 	{
@@ -48,11 +48,11 @@ void conslv::max_pooling(int pstep,int pdim)
 	conslv tmp;
 	tmp.d=tim;
 	tmp.ini();
-	for(int ix=0,kx=0;ix<tim;ix+=pstep,kx++)
+	for(int ix=0,kx=0;ix<=d-pdim;ix+=pstep,kx++)
 	{
-		for(int iy=0,ky=0;iy<tim;iy+=pstep,ky++)
+		for(int iy=0,ky=0;iy<=d-pdim;iy+=pstep,ky++)
 		{
-			double max = 0;
+			int max = 0;
 			for (int x = 0; x < pdim; x++)
 			{
 				for (int y = 0; y < pdim; y++)
@@ -77,11 +77,11 @@ void conslv::arg_pooling(int pstep,int pdim)
 	conslv tmp;
 	tmp.d=tim;
 	tmp.ini();
-	for(int ix=0,kx=0;ix<tim;ix+=pstep,kx++)
+	for(int ix=0,kx=0;ix<=d-pdim;ix+=pstep,kx++)
 	{
-		for(int iy=0,ky=0;iy<tim;iy+=pstep,ky++)
+		for(int iy=0,ky=0;iy<=d-pdim;iy+=pstep,ky++)
 		{
-			double sum = 0;
+			int sum = 0;
 			for (int x = 0; x < pdim; x++)
 			{
 				for (int y = 0; y < pdim; y++)
@@ -120,20 +120,19 @@ void conslv::fulic()
 }
 
 struct cslcore{
-	vector<vector<double>> self;
+	vector<vector<int>> self;
 	int d,pow;
 	void ini();
 };
 
 void cslcore::ini()
 {
+	InitRand();
 	vini(self,d);
 	for(auto &a:self)
 	{
 		for(auto &k:a) {
-			int tmp;
-			tmp=rand()%10;
-			tmp>4 ? k=0:k=1;
+			k=rand()%255;
 		}
 	}
 }
@@ -146,11 +145,11 @@ conslv max_pooling(conslv tar,int pstep,int pdim)
 	conslv tmp;
 	tmp.d=tim;
 	tmp.ini();
-	for(int ix=0,kx=0;ix<tim;ix+=pstep,kx++)
+	for(int ix=0,kx=0;ix<=tar.d-pdim;ix+=pstep,kx++)
 	{
-		for(int iy=0,ky=0;iy<tim;iy+=pstep,ky++)
+		for(int iy=0,ky=0;iy<=tar.d-pdim;iy+=pstep,ky++)
 		{
-			double max = 0;
+			int max = 0;
 			for (int x = 0; x < pdim; x++)
 			{
 				for (int y = 0; y < pdim; y++)
@@ -174,11 +173,11 @@ conslv arg_pooling(conslv tar,int pstep,int pdim)
 	conslv tmp;
 	tmp.d=tim;
 	tmp.ini();
-	for(int ix=0,kx=0;ix<tim;ix+=pstep,kx++)
+	for(int ix=0,kx=0;ix<=tar.d-pdim;ix+=pstep,kx++)
 	{
-		for(int iy=0,ky=0;iy<tim;iy+=pstep,ky++)
+		for(int iy=0,ky=0;iy<=tar.d-pdim;iy+=pstep,ky++)
 		{
-			double sum = 0;
+			int sum = 0;
 			for (int x = 0; x < pdim; x++)
 			{
 				for (int y = 0; y < pdim; y++)
@@ -201,11 +200,11 @@ conslv consolve(conslv tar,cslcore core,int pstep)
 	conslv tmp;
 	tmp.d=tim;
 	tmp.ini();
-	for(int ix=0,kx=0;ix<tim;ix+=pstep,kx++)
+	for(int ix=0,kx=0;ix<=tar.d-core.d;ix+=pstep,kx++)
 	{
-		for(int iy=0,ky=0;iy<tim;iy+=pstep,ky++)
+		for(int iy=0,ky=0;iy<=tar.d-core.d;iy+=pstep,ky++)
 		{
-			double sum=0;
+			int sum=0;
 			for (int x = 0; x < core.d; x++)
 			{
 				for (int y = 0; y < core.d; y++)
