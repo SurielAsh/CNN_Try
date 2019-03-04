@@ -16,12 +16,14 @@ struct convolution{
 	convolution()= default;
 	vector<vector<int>> self;
 	vector<int> fulcnet;
+	vector<double> weight;
 	void ini();
 	void ex(int ex);
 	void max_pooling(int step,int dim);
 	void arg_pooling(int step,int dim);
 	void relu();
-	void fulc();
+	double fulc();
+	void pre_fulc();
 	int size()
 	{
 		return self.size();
@@ -113,14 +115,25 @@ void convolution::relu()
 	}
 }
 
-void convolution::fulc()
+double convolution::fulc()
 {
+	double sum;
 	for(auto &a:self)
 	{
 		for(auto &k:a) {
 			fulcnet.push_back(k);
 		}
 	}
+	for(int i;i<fulcnet.size();i++)
+	{
+		sum+=fulcnet[i]*weight[i];
+	}
+	return sum;
+}
+
+void convolution::pre_fulc()
+{
+	vini(weight,fulcnet.size());
 }
 
 struct convlcore{
@@ -137,7 +150,7 @@ void convlcore::ini()
 	for(auto &a:self)
 	{
 		for(auto &k:a) {
-			k=rand()%255;
+			k=rdm(99);
 		}
 	}
 }
@@ -230,6 +243,11 @@ vector<convolution> convoluting(convolution target,vector<convlcore> corelist,in
 		result.push_back(single_convoluting(target,corelist[i],step));
 	}
 	return result;
+}
+
+inline double loss(double result,double thr_value)
+{
+	return 0.5*(thr_value-result)*(thr_value-result);
 }
 
 #endif //CNNTRY_STRUCT_TOOLS_H

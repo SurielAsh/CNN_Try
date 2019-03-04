@@ -20,11 +20,10 @@ void InitRand()
 	//std::cout<<rand()<<std::endl;
 }
 
-double rdm(int N,int i)
+double rdm(int N)
 {
 	InitRand();
-	double r=rand()%(N)/(double)(N);
-	return r;
+	return rand()%(N)/(double)(N);
 }
 
 void vini(std::vector<int> &v,int n)

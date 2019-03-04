@@ -12,7 +12,7 @@
 using std::vector;
 using namespace cv;
 
-vector<vector<int>> getimg(char* path)
+vector<vector<int>> getimg_grayscale(char *path)
 {
 	Mat image = imread(path, 0);
 	vector<vector<int>> target;
@@ -23,15 +23,13 @@ vector<vector<int>> getimg(char* path)
 	int w = image.cols;
 	int h = image.rows;
 	w>h ? vini(target,w) : vini(target,h);
-	//得到初始位置的迭代器
 	Mat_<uchar>::iterator it = image.begin<uchar>();
-	//得到终止位置的迭代器
 	Mat_<uchar>::iterator itend = image.end<uchar>();
 	for(int x=0;x<w;x++)
 	{
 		for(int y=0;y<h;y++)
 		{
-			target[x][y] = *(it + y * w + x);
+			target[x][y] = *(it + y * w + x)-1250;
 		}
 	}
 	return target;
