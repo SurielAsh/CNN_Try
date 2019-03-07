@@ -12,10 +12,10 @@
 using std::vector;
 using namespace cv;
 
-vector<vector<int>> getimg_grayscale(char *path)
+vector<vector<double>> getimg_grayscale(char *path)
 {
 	Mat image = imread(path, 0);
-	vector<vector<int>> target;
+	vector<vector<double>> target;
 	if(image.empty())
 	{
 		fprintf(stderr, "Can not load image %s\n", path);
@@ -29,7 +29,7 @@ vector<vector<int>> getimg_grayscale(char *path)
 	{
 		for(int y=0;y<h;y++)
 		{
-			target[x][y] = *(it + y * w + x)-1250;
+			target[x][y] = *(it + y * w + x);
 		}
 	}
 	return target;

@@ -26,7 +26,42 @@ double rdm(int N)
 	return rand()%(N)/(double)(N);
 }
 
-void vini(std::vector<int> &v,int n)
+template <typename T>
+void vini(vector<T> &v,int n,T par)
+{
+	for(int i=0;i<n;i++)
+		v.push_back(par);
+}
+
+template <typename T>
+void vini(vector<T> &v,int n)
+{
+	T par;
+	for(int i=0;i<n;i++)
+		v.push_back(par);
+}
+
+template <typename T>
+void vini(vector<vector<T>> &v,vector<T> &t,int n)
+{
+	for(int i=0;i<n;i++)
+		v.push_back(t);
+}
+
+template <typename T>
+void vini(vector<vector<T>> &v,int n)
+{
+	vector<T> t;
+	vini(t,n);
+	for(int i=0;i<n;i++)
+		v.push_back(t);
+}
+
+inline double derevition (double(*fun)(double),double k)
+{
+	return fun(k+0.000000000000001)-fun(k)/0.000000000000001;
+}
+/*void vini(std::vector<int> &v,int n)
 {
 	for(int i=0;i<n;i++)
 		v.push_back(0);
@@ -75,7 +110,7 @@ void vini(std::vector<double> &v,int n,double par)
 {
 	for(int i=0;i<n;i++)
 		v.push_back(par);
-}
+}*/
 
 
 #endif //CNNTRY_TOOLBOX_H

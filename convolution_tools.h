@@ -14,8 +14,8 @@ using std::vector;
 struct convolution{
 	int d;
 	convolution()= default;
-	vector<vector<int>> self;
-	vector<int> fulcnet;
+	vector<vector<double>> self;
+	vector<double> fulcnet;
 	vector<double> weight;
 	void ini();
 	void ex(int ex);
@@ -32,17 +32,20 @@ struct convolution{
 
 void convolution::ini()
 {
-	vini(self,d);
+	if(self.size()==0)
+		vini(self,d);
+	else
+		d=self.size();
 }
 
 void convolution::ex(int ex)
 {
-	vector<vector<int>> tmp;
+	vector<vector<double>> tmp;
 	vini(tmp,d+ex);
 	for(int i=0;i<d;i++)
 	{
 		for(int k=0;k<d;k++)
-			tmp[i][k]=self[i][k];
+			tmp[i+(ex/2)][k+(ex/2)]=self[i][k];
 	}
 	self=tmp;
 }
@@ -96,7 +99,7 @@ void convolution::arg_pooling(int step,int dim)
 					sum += self[ix + x][iy + y];
 				}
 			}
-			tmp.self[kx][ky]=sum/(dim^2);
+			tmp.self[kx][ky]=sum/(dim*dim);
 
 		}
 	}
@@ -138,7 +141,7 @@ void convolution::pre_fulc()
 
 struct convlcore{
 	convlcore ()= default;
-	vector<vector<int>> self;
+	vector<vector<double>> self;
 	int d,bias;
 	void ini();
 };
@@ -150,7 +153,7 @@ void convlcore::ini()
 	for(auto &a:self)
 	{
 		for(auto &k:a) {
-			k=rdm(99);
+			k=rand()%3-1;
 		}
 	}
 }
@@ -203,7 +206,7 @@ convolution arg_pooling(convolution tar,int step,int dim)
 					sum += tar.self[ix + x][iy + y];
 				}
 			}
-			tmp.self[kx][ky]=sum/(dim^2);
+			tmp.self[kx][ky]=sum/(dim*dim);
 
 		}
 	}
@@ -249,5 +252,6 @@ inline double loss(double result,double thr_value)
 {
 	return 0.5*(thr_value-result)*(thr_value-result);
 }
+
 
 #endif //CNNTRY_STRUCT_TOOLS_H
