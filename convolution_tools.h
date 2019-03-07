@@ -15,6 +15,7 @@ struct convolution{
 	int d;
 	convolution()= default;
 	vector<vector<double>> self;
+	vector<vector<double>> epool;
 	vector<double> fulcnet;
 	vector<double> weight;
 	void ini();
@@ -23,6 +24,7 @@ struct convolution{
 	void arg_pooling(int step,int dim);
 	void relu();
 	double fulc();
+	void repool(int step,int dim,vector<double> e);
 	void pre_fulc();
 	int size()
 	{
@@ -36,6 +38,12 @@ void convolution::ini()
 		vini(self,d);
 	else
 		d=self.size();
+	epool=self;
+	for(auto &v:epool)
+	{
+		for(auto &a:v)
+			a=0;
+	}
 }
 
 void convolution::ex(int ex)
@@ -63,16 +71,20 @@ void convolution::max_pooling(int step,int dim)
 		for(int iy=0,ky=0;iy<=d-dim;iy+=step,ky++)
 		{
 			int max = 0;
+			int max_x=0,max_y=0;
 			for (int x = 0; x < dim; x++)
 			{
 				for (int y = 0; y < dim; y++)
 				{
-					if (self[ix + x][iy + y] > max)
+					if (self[ix + x][iy + y] > max) {
 						max = self[ix + x][iy + y];
+						max_x=ix+x;
+						max_y=iy+y;
+					}
 				}
 			}
 			tmp.self[kx][ky]=max;
-
+			epool[max_x][max_y]=max;
 		}
 	}
 	self=tmp.self;
@@ -127,17 +139,51 @@ double convolution::fulc()
 			fulcnet.push_back(k);
 		}
 	}
-	for(int i;i<fulcnet.size();i++)
+	if(weight.size()==0)
+		pre_fulc();
+	for(int i=0;i<fulcnet.size();i++)
 	{
 		sum+=fulcnet[i]*weight[i];
 	}
-	return sum;
+	return sum/fulcnet.size();
 }
 
 void convolution::pre_fulc()
 {
 	vini(weight,fulcnet.size());
+	for(auto &a:weight){
+		a=rand()%2;
+	}
 }
+
+void convolution::repool(int step,int dim,vector<double> e)
+{
+	int time=0;
+	for(int ix=0,kx=0;ix<=d-dim;ix+=step,kx++)
+	{
+		for(int iy=0,ky=0;iy<=d-dim;iy+=step,ky++)
+		{
+			double temp=e[time];
+			for (int x = 0; x < dim; x++)
+			{
+				for (int y = 0; y < dim; y++)
+				{
+					epool[ix + x][iy + y]*=temp;
+				}
+			}
+			time++;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
 
 struct convlcore{
 	convlcore ()= default;
@@ -235,6 +281,7 @@ convolution single_convoluting(convolution target, convlcore core, int step)
 			result.self[kx][ky]=sum;
 		}
 	}
+	result.ini();
 	return result;
 }
 

@@ -16,7 +16,7 @@ void InitRand()
 	//gettimeofday(&tv,NULL);
 	//unsigned t=tv.tv_usec;
 	//srand(t+rand());
-	srand(clock()+rand());
+	srand(time(0)+rand());
 	//std::cout<<rand()<<std::endl;
 }
 
@@ -57,9 +57,9 @@ void vini(vector<vector<T>> &v,int n)
 		v.push_back(t);
 }
 
-inline double derevition (double(*fun)(double),double k)
+inline double derevition (double(*fun)(double,double),double rslt,double thr)
 {
-	return fun(k+0.000000000000001)-fun(k)/0.000000000000001;
+	return (fun(rslt+0.000000000001,thr)-fun(rslt,thr))/0.000000000001;
 }
 /*void vini(std::vector<int> &v,int n)
 {

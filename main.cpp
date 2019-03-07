@@ -10,101 +10,109 @@ using namespace std;
 int main()
 {
 	int time=-1;
-	int learn_time=10;
+	int core_num=1;
+	int layers=1;
+	int learn_time=50;
 	double rslt=0;
-	string name;
-	string imagepath;
+	double e_1o=100000000;
+	string name="clion";
+	string imagepath="clion.png";
 	convolution ori;
-	vector<convlcore> vcore1;
-	vector<vector<convlcore>> vcore2;
-	vector<convolution> firstcvl;
-	vector<convolution> seccvl;
+	vector<vector<convlcore>> vcore;
+	vector<vector<convolution>> cvl;
 
-	cout<<"被学习图片中的物体是：";
-	cin>>name;
+	double e_1;
+	vector<double> e_2;
+	vector<convlcore> e_3;
+	vector<convolution> e_4;
 
+	vector<double> weight;
+
+	vini(vcore,1);
+
+	for(auto &core:vcore) {
+		//vini(core, core_num);
+		for(auto &c:core) {
+			c.d=5;
+			c.bias=0;
+			c.ini();
+		}
+	}
+	vini(cvl,1);
+
+	//cout<<"请输入要检测特征的名称：";
+	//cin>>name;
 	head:
-	rslt=0;
 	time++;
-	cout<<"这是第 "<<time+1<<" 次学习，距完成还需"<<9-time<<"次"<<endl;
-	cin>>imagepath;
+	inierr:
+	if(time==0)
+		e_1o=100000000;
+	//cout<<"请输入参考图像的路径：";
+	//cin>>imagepth;
 	ori.self=getimg_grayscale(imagepath.data());
 	ori.ini();
+	cvl[0]=convoluting(ori,vcore[0],3);
+	if(time!=0)
+		cvl[0][0].weight=weight;
+	cvl[0][0].relu();
+	cvl[0][0].max_pooling(2,2);
+	rslt=cvl[0][0].fulc();
 
-	int number_of_core=5;
+	e_1 = derevition(loss, rslt, 99);
+	//if((e_1*e_1)>(e_1o*e_1o)) {
+	//	time=0;
+	//	goto inierr;
+	//}
+	e_1o=e_1;
+	//e_1=loss(rslt+0.00000000001,99)-/
 	if(time==0) {
-		vini(vcore1,number_of_core);
-		for (auto core:vcore1) {
-			core.d = 7;
-			core.ini();
+		vini(e_2, cvl[0][0].weight.size(), 0.);
+	}
+	for(int i=0;i<e_2.size();i++)
+	{
+		e_2[i]=e_1*(cvl[0][0].fulcnet[i]/cvl[0][0].fulcnet.size());
+		if(e_2[i]<-100)
+			e_2[i]=-5;
+		cvl[0][0].weight[i]-=e_1*(cvl[0][0].fulcnet[i]/cvl[0][0].fulcnet.size());
+	}
+	weight=cvl[0][0].weight;
+	cvl[0][0].repool(2,2,e_2);
+	if(time==0) {
+		vini(e_3, 1);
+		vini(e_3[0].self,cvl[0][0].epool.size());
+	}
+	for(int x;x<cvl[0][0].epool.size();x++)
+	{
+		for(int y;y<cvl[0][0].epool.size();y++)
+		{
+			e_3[0].self[x][y]=cvl[0][0].epool[cvl[0][0].epool.size()-1-x][cvl[0][0].epool.size()-1-y];
 		}
 	}
-
-	firstcvl=convoluting(ori,vcore1,5);
-
-	for(auto cvl:firstcvl)
+	//e_3[0].self=cvl[0][0].epool;
+	e_3[0].d=cvl[0][0].epool.size();
+	int bps=ori.self.size()/vcore[0][0].self.size();
+	e_4=convoluting(ori,e_3,bps);
+	for(int x;x<vcore[0][0].self.size();x++)
 	{
-		cvl.relu();
-	}
-
-	if(time==0) {
-		vini(vcore2, number_of_core);
-		for (auto vcore:vcore2) {
-			for (auto core:vcore) {
-				core.d = 5;
-				core.ini();
-			}
+		for(int y;y<vcore[0][0].self.size();y++)
+		{
+			vcore[0][0].self[x][y]-=(e_4[0].self[x][y]);
 		}
 	}
-
-	for(int i=0;i<firstcvl.size();i++)
-	{
-			vector<convolution> temp=convoluting(firstcvl[i],vcore2[i],3);
-			for(auto cvl:temp)
-			{
-				seccvl.push_back(cvl);
-			}
-	}
-
-	for(auto cvl:seccvl)
-	{
-		cvl.max_pooling(2,3);
-		vini(cvl.weight,cvl.size());
-		rslt+=cvl.fulc();
-	}
-
-	int vs=seccvl.size();
-
-	for(int i=0;i<vs;i++)
-		seccvl.pop_back();
 
 	if(time<learn_time)
 		goto head;
 
-	cout<<"学习已完成，请输入验证图片"<<endl;
-	cin>>imagepath;
+	//cout<<"训练已完成，请输入要验证的图片路径";
+	//cin>>imagepath;
+	imagepath="pycharm.png";
 	ori.self=getimg_grayscale(imagepath.data());
 	ori.ini();
-	firstcvl=convoluting(ori,vcore1,5);
-	for(auto cvl:firstcvl)
-	{
-		cvl.relu();
-	}
-	for(int i=0;i<firstcvl.size();i++)
-	{
-		vector<convolution> temp=convoluting(firstcvl[i],vcore2[i],3);
-		for(auto cvl:temp)
-		{
-			seccvl.push_back(cvl);
-		}
-	}
-	for(auto cvl:seccvl)
-	{
-		cvl.max_pooling(2,3);
-		vini(cvl.weight,cvl.size());
-		rslt+=cvl.fulc();
-	}
-	cout<<"该图片中物品为 "<<name<<" 的概率是"<<rslt*100<<"%"<<endl;
-
+	cvl[0]=convoluting(ori,vcore[0],3);
+	cvl[0][0].weight=weight;
+	cvl[0][0].relu();
+	cvl[0][0].max_pooling(2,2);
+	rslt=cvl[0][0].fulc();
+	cout<<"该图片中含有 "<<name<<" 特征的概率是："<<rslt<<"%";
 	return 0;
 }
