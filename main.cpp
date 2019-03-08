@@ -33,7 +33,7 @@ int main()
 	for(auto &core:vcore) {
 		//vini(core, core_num);
 		for(auto &c:core) {
-			c.d=5;
+			c.d=7;
 			c.bias=0;
 			c.ini();
 		}
@@ -62,6 +62,7 @@ int main()
 	cvl[0][0].max_pooling(2,2);
 	rslt=cvl[0][0].fulc();
 
+	double l=loss(rslt,0.99);
 	e_1 = derevition(loss, rslt, 0.99);
 	//if((e_1*e_1)>(e_1o*e_1o)) {
 	//	time=0;
@@ -75,7 +76,7 @@ int main()
 	for(int i=0;i<e_2.size();i++)
 	{
 		e_2[i]=e_1*(cvl[0][0].fulcnet[i]/cvl[0][0].fulcnet.size());
-		cvl[0][0].weight[i]-=e_1*(cvl[0][0].fulcnet[i]/cvl[0][0].fulcnet.size());
+		cvl[0][0].weight[i]-=e_2[i];
 	}
 	weight=cvl[0][0].weight;
 	cvl[0][0].repool(2,2,e_2);
@@ -98,7 +99,7 @@ int main()
 	{
 		for(int y;y<vcore[0][0].self.size();y++)
 		{
-			vcore[0][0].self[x][y]-=(e_4[0].self[x][y]);
+			vcore[0][0].self[x][y]-=(e_4[0].self[x][y])*(1/(vcore[0][0].d*vcore[0][0].d));
 		}
 	}
 
@@ -117,6 +118,6 @@ int main()
 	rslt=cvl[0][0].fulc();
 	if(rslt<0)
 		rslt=0;
-	cout<<"该图片中含有 "<<name<<" 特征的概率是："<<rslt*100;//<<"%";
+	cout<<"该图片中含有 "<<name<<" 特征的概率是："<<rslt/100;//<<"%";
 	return 0;
 }

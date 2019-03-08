@@ -152,7 +152,7 @@ void convolution::pre_fulc()
 {
 	vini(weight,fulcnet.size());
 	for(auto &a:weight){
-		a=rand()%2;
+		a=rdm(99)/10;
 	}
 }
 
@@ -198,7 +198,7 @@ void convlcore::ini()
 	vini(self,d);
 	for(auto &a:self)
 	{
-		for(auto &k:a) {
+		for(double &k:a) {
 			k=rand()%3-1;
 		}
 	}
@@ -270,12 +270,13 @@ convolution single_convoluting(convolution target, convlcore core, int step)
 	{
 		for(int iy=0,ky=0;iy<=target.d-core.d;iy+=step,ky++)
 		{
-			int sum=0;
+			double sum=0;
 			for (int x = 0; x < core.d; x++)
 			{
 				for (int y = 0; y < core.d; y++)
 				{
-					sum += (target.self[ix + x][iy + y]*core.self[x][y]+core.bias);
+					double tmp=target.self[ix + x][iy + y]*core.self[x][y]+core.bias;
+					sum += tmp;
 				}
 			}
 			result.self[kx][ky]=sum/(core.d*core.d);
