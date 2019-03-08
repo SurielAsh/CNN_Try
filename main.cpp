@@ -12,11 +12,11 @@ int main()
 	int time=-1;
 	int core_num=1;
 	int layers=1;
-	int learn_time=50;
+	int learn_time=100;
 	double rslt=0;
-	double e_1o=100000000;
-	string name="clion";
-	string imagepath="clion.png";
+	//double e_1o=100000000;
+	string name="pycharm";
+	string imagepath="pycharm.png";
 	convolution ori;
 	vector<vector<convlcore>> vcore;
 	vector<vector<convolution>> cvl;
@@ -45,10 +45,14 @@ int main()
 	head:
 	time++;
 	inierr:
-	if(time==0)
-		e_1o=100000000;
+	//if(time==0)
+		//e_1o=100000000;
 	//cout<<"请输入参考图像的路径：";
 	//cin>>imagepth;
+	//if(time<30)
+	//	imagepath="2.jpg";
+	//else
+	//	imagepath="2.jpeg";
 	ori.self=getimg_grayscale(imagepath.data());
 	ori.ini();
 	cvl[0]=convoluting(ori,vcore[0],3);
@@ -58,12 +62,12 @@ int main()
 	cvl[0][0].max_pooling(2,2);
 	rslt=cvl[0][0].fulc();
 
-	e_1 = derevition(loss, rslt, 99);
+	e_1 = derevition(loss, rslt, 0.99);
 	//if((e_1*e_1)>(e_1o*e_1o)) {
 	//	time=0;
 	//	goto inierr;
 	//}
-	e_1o=e_1;
+	//e_1o=e_1;
 	//e_1=loss(rslt+0.00000000001,99)-/
 	if(time==0) {
 		vini(e_2, cvl[0][0].weight.size(), 0.);
@@ -71,8 +75,6 @@ int main()
 	for(int i=0;i<e_2.size();i++)
 	{
 		e_2[i]=e_1*(cvl[0][0].fulcnet[i]/cvl[0][0].fulcnet.size());
-		if(e_2[i]<-100)
-			e_2[i]=-5;
 		cvl[0][0].weight[i]-=e_1*(cvl[0][0].fulcnet[i]/cvl[0][0].fulcnet.size());
 	}
 	weight=cvl[0][0].weight;
@@ -113,6 +115,8 @@ int main()
 	cvl[0][0].relu();
 	cvl[0][0].max_pooling(2,2);
 	rslt=cvl[0][0].fulc();
-	cout<<"该图片中含有 "<<name<<" 特征的概率是："<<rslt<<"%";
+	if(rslt<0)
+		rslt=0;
+	cout<<"该图片中含有 "<<name<<" 特征的概率是："<<rslt*100;//<<"%";
 	return 0;
 }

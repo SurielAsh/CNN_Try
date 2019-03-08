@@ -29,7 +29,8 @@ vector<vector<double>> getimg_grayscale(char *path)
 	{
 		for(int y=0;y<h;y++)
 		{
-			target[x][y] = *(it + y * w + x);
+			double k=*(it + y * w + x);
+			target[x][y] = k;
 		}
 	}
 	return target;

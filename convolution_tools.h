@@ -278,7 +278,8 @@ convolution single_convoluting(convolution target, convlcore core, int step)
 					sum += (target.self[ix + x][iy + y]*core.self[x][y]+core.bias);
 				}
 			}
-			result.self[kx][ky]=sum;
+			result.self[kx][ky]=sum/(core.d*core.d);
+			//result.self[kx][ky]=sum;
 		}
 	}
 	result.ini();
